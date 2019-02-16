@@ -1,2 +1,2 @@
-# ssa
+# SSA
 Stochastic Simulation Algorithms.

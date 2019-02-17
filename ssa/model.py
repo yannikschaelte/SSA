@@ -1,4 +1,5 @@
 import numpy as np
+import multiprocessing as mp
 
 from .direct import direct
 from .util import get_k_stoch
@@ -15,7 +16,8 @@ class Model:
             k_is_det: bool = True,
             volume: float = 1.0,
             use_na: bool = False,
-            t_max = None):
+            t_max = None,
+            engine = None):
         """
         Parameters
         ----------
@@ -87,6 +89,8 @@ class Model:
             volume: floate = None,
             use_na: bool = None,
             t_max: float = None,
+            n_reps: int = 1,
+            n_procs: int = 1,
             alg = None,
             **kwargs):
         # choose algorithm
@@ -101,10 +105,33 @@ class Model:
         self.check_consistency()
 
         # run
-        result = alg(
+        alg_args = dict(
             reactants = self.reactants,
             products = self.products,
             x0 = self.x0,
             k_stoch = self.k_stoch,
-            t_max = self.t_max)
+            t_max = self.t_max,
+            **kwargs)
 
+        # define tasks
+        tasks = []
+        for _ in n_reps:
+            task = SimulationTask(
+
+        
+        ret = self.engine.execute(tasks=tasks)
+        
+        list_ts = []
+        list_xs = []
+        for ts, xs in ret:
+            list_ts.append(ts)
+            list_xs.append(xs)
+        
+        return Result(list_ts=list_ts, list_xs=list_xs)
+
+        if n_procs == 1:
+            result = alg(**alg_args)
+        else:
+            with mp.Pool(processes=n_procs) as pool:
+                results = pool.map(alg, alg_args)
+                

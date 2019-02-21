@@ -1,4 +1,5 @@
 import numpy as np
+import numbers
 import multiprocessing as mp
 
 from .direct import direct
@@ -6,18 +7,25 @@ from .util import get_k_stoch
 
 
 class Model:
+    """
+    A chemical reaction network model.
+
+    Attributes
+    ----------
+
+    reactants: np.ndarray, shape = (nr, ns)
+    products: np.ndarray, shape = (nr, ns)
+    x0: np.ndarray, shape = (nr, )
+    k: np.ndarray, shape = (ns, )
+    t_max: numbers.Number
+    """
 
     def __init__(
             self,
             reactants: np.ndarray,
             products: np.ndarray,
             x0: np.ndarray,
-            k: np.ndarray,
-            k_is_det: bool = True,
-            volume: float = 1.0,
-            use_na: bool = False,
-            t_max = None,
-            engine = None):
+            t_max: numbers.Number):
         """
         Parameters
         ----------
@@ -29,47 +37,38 @@ class Model:
         volume: float, optional (default = 1.0)
         use_na: bool, optional (default = False)
         """
-        self.reactants = reactants
-        self.products = products
-        self.x0 = x0
-
-        self.k_stoch = None
-        self.k_is_det = k_is_det
-        self.volume = volume
-        self.use_na = use_na
-        self.update_k_stoch()
-
-        self.t_max = t_max
+        self._reactants = reactants
+        self._products = products
+        self._x0 = x0
+        self._t_max = t_max
+        self._k = None
 
         # dimensions
-        self.nr, self.ns = reactants.shape
+        self._nr, self._ns = reactants.shape
 
         # set shapes
-        self.x0.shape = (self.ns, 1)
-        self.k_stoch.shape = (1, self.nr)
+        self._configure()
 
-    def update_k_stoch(
+    def set_k(
             self,
             k: np.ndarray,
-            k_is_det: bool = None,
-            volume: float = None,
-            use_na: bool = None):
-        if k is None:
-            return
+            is_det: bool = True,
+            volume: float = 1.0,
+            use_na: bool = True):
+        """
+        Parameters
+        ----------
 
-        if k_is_det is not None:
-            self.k_is_det = k_is_det
-        if volume is not None:
-            self.volume = volume
-        if use_na is not None:
-            self.use_na = use_na
+        k: np.ndarray, shape = (nr, 1)
+            The reaction rate constants.
+        is_det: bool, optional (default = True)
+            Whether k is to be interpreted as deterministic reaction rate
+            constants. In that case, it must be converted to stochastic
+            rates working on single molecules.
 
-        if self.k_is_det:
-            self.k_stoch = get_k_stoch(
+        if is_det:
+            self.k = get_k_stoch(
                 k, self.reactants, self.volume, self.na)
-        else:
-            self.k_stoch = k
-
         self.k_stoch.shape = (1, self.nr)
 
     def update_t_max(

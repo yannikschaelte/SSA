@@ -2,53 +2,49 @@ import numba as nb
 import numpy as np
 
 from .util import sample_discrete
+from .output import Output
 
 
-@nb.jit(nopython=True, nogil=True, cache=False)
+#@nb.jit(nopython=True, nogil=True, cache=False)
 def direct(
         reactants: np.ndarray,
-        products: np.ndarray,
+        reaction_matrix: np.ndarray,
         x0: np.ndarray,
-        k_stoch: np.ndarray,
-        t_max: np.ndarray):
-    """
-
-    Parameters
-    ----------
-    """
-    # compute reaction matrix
-    reaction_matrix = products - reactants
-
+        k: np.ndarray,
+        t_max: np.ndarray,
+        output: Output):
     # prepared running variables
-    t = 0
+    t = 0.0
     x = x0.copy()
 
     # prepare output
-    ts = [t]
-    xs = [x]
+    output.initialize(t_max=t_max)
+
+    # append initial state
+    output.append(t, x)
 
     while t < t_max:
         # find reaction hazards
-        hazards = k_stoch * (xt ** reactants).prod(axis=1)
+        hazards = k * (x ** reactants).prod(axis=1)
         h0 = np.sum(hazards)
 
         # sample reaction index
         index = sample_discrete(hazards / h0)
 
         # sample time
-        delta_t = np.random.exponential(scale = 1 / h0)
+        delta_t = np.random.exponential(scale = 1.0 / h0)
 
         # update state
         t = t + delta_t
         x = x + reaction_matrix[index]
 
         # update trajectory
-        if t <= t_max:
-            ts.append(t)
-            xs.append(x)
+        output.append(t, x)
+
+    # tidy up output
+    output.finalize()
 
     # transform to ndarrays
-    ts = np.array(ts)
-    xs = np.array(xs)
+    ts, xs = output.as_ndarrays()
 
     return ts, xs

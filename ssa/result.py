@@ -5,9 +5,7 @@ class Result:
 
     def __init__(
             self,
-            ts,
-            xs,
-            alg):
-        self.ts = ts
-        self.xs = xs
-        
+            list_ts,
+            list_xs):
+        self.list_ts = list_ts
+        self.list_xs = list_xs

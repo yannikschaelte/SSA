@@ -6,11 +6,11 @@ import numpy as np
 NA = 6.02214085774e23
 
 
-@np.jit(nopython=True, nogil=True, cache=False)
+#@nb.jit(nopython=True, nogil=True, cache=False)
 def get_k_stoch(
         k_det: np.ndarray,
         reactants: np.ndarray,
-        volume: float = 1.0,
+        volume: float,
         use_na: bool):
     nr = reactants.shape[0]
 
@@ -29,14 +29,14 @@ def get_k_stoch(
         factor = 1.0 * volume
 
     for ir in range(nr):
-        k_stoch[ir] /= np.power(factor, orders[ir] - 1)
-        if reactants[ir, :].max() == 2:
+        k_stoch[ir] /= np.power(factor, reaction_orders[ir] - 1)
+        if np.max(reactants[ir, :]) == 2:
             k_stoch[ir] *= 2
 
     return k_stoch
 
 
-@np.jit(nopython=True, nogil=True, cache=False)
+#@nb.jit(nopython=True, nogil=True, cache=False)
 def sample_discrete(propensities):
     """
     Sample an index from weighted discrete distribution.
@@ -61,6 +61,6 @@ def sample_discrete(propensities):
     # sample
     p = np.random.uniform()
     # find right index of where p would be inserted
-    index = cdf.searchsorted(q, side='right')
+    index = cdf.searchsorted(p, side='right')
 
     return index

@@ -74,8 +74,7 @@ class ArrayOutput(Output):
         self.nt = len(self.ts)
 
         # prepare states
-        ns = len(x0)
-        self.xs = np.full((self.nt, ns), np.nan)
+        self.xs = np.full((self.nt, len(x0)), np.nan)
         self.x_prev = x0
 
         # reset current array index

@@ -16,10 +16,10 @@ class Model:
     Attributes
     ----------
 
-    reactants: np.ndarray, shape = (nr, ns)
-    products: np.ndarray, shape = (nr, ns)
+    reactants: np.ndarray, shape = (nr, nx)
+    products: np.ndarray, shape = (nr, nx)
     x0: np.ndarray, shape = (nr, )
-    k: np.ndarray, shape = (ns, )
+    k: np.ndarray, shape = (nx, )
     t_max: numbers.Number
     """
 
@@ -35,17 +35,6 @@ class Model:
             volume: float = 1.0,
             use_na: bool = False,
             n_procs: int = 1):
-        """
-        Parameters
-        ----------
-
-        reactants: np.ndarray, shape = (nr, ns)
-        products: np.ndarray, shape = (nr, ns)
-        x0: np.ndarray, size = ns
-        k_det:: np.ndarray, size = nr
-        volume: float, optional (default = 1.0)
-        use_na: bool, optional (default = False)
-        """
         self.reactants = reactants
         self.products = products
         
@@ -60,7 +49,7 @@ class Model:
 
         self.engine = MultiProcessEngine(n_procs=n_procs)
 
-        self.nr, self.ns = reactants.shape
+        self.nr, self.nx = reactants.shape
 
         self._configure()
 
@@ -86,11 +75,11 @@ class Model:
             self.k = get_k_stoch(k, reactants, volume, use_na)
 
     def _configure(self):
-        self.reactants.shape = (self.nr, self.ns)
-        self.products.shape = (self.nr, self.ns)
-        self.reaction_matrix.shape = (self.nr, self.ns)
-        self.x0.flatten() #shape = (self.ns, 1)
-        self.k.flatten() #shape = (self.nr, 1)
+        self.reactants.shape = (self.nr, self.nx)
+        self.products.shape = (self.nr, self.nx)
+        self.reaction_matrix.shape = (self.nr, self.nx)
+        self.x0.flatten()
+        self.k.flatten()
         if not isinstance(self.t_max, numbers.Number) or not np.isfinite(self.t_max):
             raise ValueError("t_max must be a finite integer.")
 

@@ -6,7 +6,6 @@ import numpy as np
 NA = 6.02214085774e23
 
 
-#@nb.jit
 def get_k_stoch(
         k_det: np.ndarray,
         reactants: np.ndarray,
@@ -37,16 +36,16 @@ def get_k_stoch(
 
 
 #@nb.jit
-def sample_discrete(propensities):
+def sample_discrete(cdv):
     """
-    Sample an index from weighted discrete distribution.
+    Sample an index from a weighted discrete distribution.
 
     Parameters
     ----------
 
-    propensities: np.ndarray, shape = (nr, )
-        Propensity vector. The sum of weights is not requried to be normalized
-        to 1.
+    cdv: np.ndarray, shape = (nr, )
+        Cumulative distribution vector associated with the propensity
+        vector.
 
     Returns
     -------
@@ -54,13 +53,9 @@ def sample_discrete(propensities):
     index: int
         The index in [0, nr - 1] sampled according to the propensity weights.
     """
-    # cumulative distribution function
-    cdf = propensities.cumsum()
-    # normalize to 1
-    cdf /= cdf[-1]
     # sample
     p = np.random.uniform()
     # find right index of where p would be inserted
-    index = cdf.searchsorted(p, side='right')
+    index = cdv.searchsorted(p, side='right')
 
     return index

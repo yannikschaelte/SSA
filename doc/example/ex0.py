@@ -26,7 +26,7 @@ def run():
     timepoints = np.linspace(0, t_max, 20)
 
     #model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.FullOutput())
-    model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.ArrayOutput(timepoints))
+    model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.ArrayOutput(timepoints), n_procs=2)
     result = model.simulate(n_reps = 100)
 
     for j in range(len(result.list_ts)):

@@ -46,3 +46,22 @@ class FullOutput(Output):
         ts = np.array(self.ts)
         xs = np.array(self.xs)
         return ts, xs
+
+
+class ArrayOutput(Output):
+
+    def __init__(self, ts: np.ndarray):
+        super().__init__()
+        self.ts = ts
+        self.xs = None
+
+    def create_empty(self):
+        return ArrayOutput(self.ts)
+
+    def append(self, t, x):
+        pass
+
+    def as_ndarray(self):
+        ts = np.array(self.ts)
+        xs = np.array(self.xs)
+        return ts, xs

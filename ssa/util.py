@@ -6,7 +6,7 @@ import numpy as np
 NA = 6.02214085774e23
 
 
-#@nb.jit(nopython=True, nogil=True, cache=False)
+#@nb.jit
 def get_k_stoch(
         k_det: np.ndarray,
         reactants: np.ndarray,
@@ -36,7 +36,7 @@ def get_k_stoch(
     return k_stoch
 
 
-#@nb.jit(nopython=True, nogil=True, cache=False)
+#@nb.jit
 def sample_discrete(propensities):
     """
     Sample an index from weighted discrete distribution.

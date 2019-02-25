@@ -5,7 +5,7 @@ from .util import sample_discrete
 from .output import Output
 
 
-#@nb.jit(nopython=True, nogil=True, cache=False)
+#@nb.jit
 def direct(
         reactants: np.ndarray,
         reaction_matrix: np.ndarray,

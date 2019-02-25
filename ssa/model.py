@@ -32,7 +32,8 @@ class Model:
             output: Output,
             k_is_det: bool = True,
             volume: float = 1.0,
-            use_na: bool = False):
+            use_na: bool = False,
+            engine: None):
         """
         Parameters
         ----------
@@ -53,7 +54,12 @@ class Model:
         self.t_max = t_max
         self.k = None
         self.set_k(k, reactants, k_is_det, volume, use_na)
+
         self.output = output
+
+        if engine is None:
+            engine = MultiProcessEngine()
+        self.engine = engine
 
         self.nr, self.ns = reactants.shape
 
@@ -108,6 +114,7 @@ class Model:
             output = self.output.create_empty(),
             **kwargs)
 
+        self.engine.execute(alg, alg_args, n_reps)
         list_ts = []
         list_xs = []
         for _ in range(n_reps):

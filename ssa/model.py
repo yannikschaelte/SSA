@@ -6,6 +6,7 @@ from .direct import direct
 from .util import get_k_stoch
 from .output import Output
 from .result import Result
+from .engine import MultiProcessEngine, SimulationTask
 
 
 class Model:
@@ -33,7 +34,7 @@ class Model:
             k_is_det: bool = True,
             volume: float = 1.0,
             use_na: bool = False,
-            engine: None):
+            n_procs: int = 1):
         """
         Parameters
         ----------
@@ -57,9 +58,7 @@ class Model:
 
         self.output = output
 
-        if engine is None:
-            engine = MultiProcessEngine()
-        self.engine = engine
+        self.engine = MultiProcessEngine(n_procs=n_procs)
 
         self.nr, self.ns = reactants.shape
 
@@ -104,7 +103,7 @@ class Model:
         if alg is None:
             alg = direct
 
-        # run
+        # algorithm arguments
         alg_args = dict(
             reactants = self.reactants,
             reaction_matrix = self.reaction_matrix,
@@ -114,11 +113,21 @@ class Model:
             output = self.output.create_empty(),
             **kwargs)
 
-        self.engine.execute(alg, alg_args, n_reps)
         list_ts = []
         list_xs = []
+        # create tasks
+        tasks = []
         for _ in range(n_reps):
-            ts, xs = alg(**alg_args)
+            task = SimulationTask(alg, alg_args)
+            tasks.append(task)
+
+        # run
+        ret = self.engine.execute(tasks)
+
+        # collect results
+        list_ts = []
+        list_xs = []
+        for ts, xs in ret:
             list_ts.append(ts)
             list_xs.append(xs)
         

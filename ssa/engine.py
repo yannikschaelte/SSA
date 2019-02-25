@@ -3,8 +3,6 @@ import cloudpickle as pickle
 import os
 import logging
 
-from .base import Engine
-
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +12,17 @@ def work(pickled_task):
     return task.execute()
 
 
-class MultiProcessEngine(Engine):
+class SimulationTask:
+
+    def __init__(self, alg, alg_args):
+        self.alg = alg
+        self.alg_args = alg_args
+
+    def execute(self):
+        return self.alg(**self.alg_args)
+
+
+class MultiProcessEngine:
     """
     Parallelize the task execution using the `multiprocessing.Pool`
     environment.
@@ -38,16 +46,18 @@ class MultiProcessEngine(Engine):
                 f"appropriate on some systems.")
         self.n_procs = n_procs
 
-    def execute(self, tasks, n_procs):
-        n_tasks = len(tasks)
+    def execute(self, tasks):
+        if self.n_procs == 1:
+            ret = []
+            for task in tasks:
+                ret.append(task.execute())
+        else:
+            pickled_tasks = [pickle.dumps(task) for task in tasks]
+            n_procs = min(self.n_procs, len(tasks))
+            logger.info(f"Performing parallel task execution on {n_procs} "
+                        f"processes.")
 
-        pickled_tasks = [pickle.dumps(task) for task in tasks]
+            with Pool(processes=n_procs) as pool:
+                ret = pool.map(work, pickled_tasks)
 
-        n_procs = min(self.n_procs, n_tasks)
-        logger.info(f"Performing parallel task execution on {n_procs} "
-                    f"processes.")
-
-        with Pool(processes=n_procs) as pool:
-            results = pool.map(work, pickled_tasks)
-
-        return results
+        return ret

@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def work(pickled_task):
+    np.random.seed()
     task = pickle.loads(pickled_task)
     return task.execute()
 

@@ -25,21 +25,22 @@ def run():
     t_max = 2e2
     timepoints = np.linspace(0, t_max, 20)
 
-    #model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.FullOutput())
-    model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.ArrayOutput(timepoints), n_procs=2)
+    model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.FullOutput(), n_procs=2)
+    #model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.ArrayOutput(timepoints), n_procs=2)
     result = model.simulate(n_reps = 100)
 
     for j in range(len(result.list_ts)):
         #print(result.list_ts[j][-10:])
         #print(result.list_xs[j][-10:])
         pass
+    ssa.plot(result, show=True)
+    #viz_y(result)
 
-    viz_y(result)
 
 
-
-cProfile.run("run()", 'restats')
+#cProfile.run("run()", 'restats')
 #p.strip_dirs().sort_stats(-1).print_stats()
 #print(timeit.timeit("run()", setup="from __main__ import run", number=10))
+run()
 
 #viz_y(result.list_ts, result.list_xs)

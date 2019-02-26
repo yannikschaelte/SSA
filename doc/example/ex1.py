@@ -85,8 +85,8 @@ t_max = 2e2
 timepoints = np.linspace(0, t_max, 20)
 
 def run():
-    #model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.FullOutput())
-    model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.ArrayOutput(timepoints))
+    model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.FullOutput())
+    #model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.ArrayOutput(timepoints))
     result = model.simulate(n_reps = 10)
 
     for j in range(len(result.list_ts)):

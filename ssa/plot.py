@@ -4,7 +4,7 @@ from typing import List
 
 from .result import Result
 
-def plot(
+def plot_raw(
         result: Result,
         x_indices: List[int] = None,
         x_names: List[str] = None,

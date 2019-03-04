@@ -9,8 +9,8 @@ def plot(
         result: Union[FullResult, ArrayResult],
         x_indices: List[int] = None,
         x_names: List[str] = None,
-        show_mean: bool = False,
-        show_std: bool = False,
+        show_mean: bool = True,
+        show_std: bool = True,
         set_xlim_to_t_max: bool = True,
         show_legend: bool = True,
         show: bool = False):

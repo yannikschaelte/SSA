@@ -55,7 +55,7 @@ def plot(
 
     # mean
     mean = np.mean(result.matrix_xs, axis=0)
-    if show_mean:
+    if show_mean and nr > 1:
         for ix in range(n_indices):
             ax.step(
                 result.ts,
@@ -66,7 +66,7 @@ def plot(
             #legend[0].append(plt.Line2D([0], [0], color=cm(ix / n_indices), alpha=1.0))
             #legend[1].append("mean " + x_names[ix])
 
-    if show_std:
+    if show_std and nr > 1:
         std = np.sqrt(np.var(result.matrix_xs, axis=0))
         for ix in range(n_indices):
             ax.fill_between(

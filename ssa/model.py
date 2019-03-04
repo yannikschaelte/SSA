@@ -120,5 +120,5 @@ class Model:
             list_ts.append(ts)
             list_xs.append(xs)
         
-        return FullResult(list_ts, list_xs)
+        return FullResult(list_ts, list_xs, self.t_max)
 

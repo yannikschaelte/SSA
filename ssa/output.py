@@ -98,6 +98,11 @@ class ArrayOutput(Output):
         # remember latest x
         self.x_prev = x
 
+    def finalize(self):
+        while self.cur_ix < self.nt:
+            self.xs[self.cur_ix, :] = self.x_prev
+            self.cur_ix += 1
+
     def as_ndarrays(self):
         if self.cur_ix < self.nt:
             raise ValueError(

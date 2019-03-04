@@ -5,7 +5,7 @@ import multiprocessing as mp
 from .direct import direct
 from .util import get_k_stoch
 from .output import Output
-from .result import Result
+from .result import FullResult
 from .engine import MultiProcessEngine, SimulationTask
 
 
@@ -120,5 +120,5 @@ class Model:
             list_ts.append(ts)
             list_xs.append(xs)
         
-        return Result(list_ts, list_xs)
+        return FullResult(list_ts, list_xs)
 

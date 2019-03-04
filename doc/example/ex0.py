@@ -23,17 +23,15 @@ def run():
 
     k = np.array([1.0, 1.0, 0.1, 0.04])
     t_max = 2e2
-    timepoints = np.linspace(0, t_max, 20)
+    timepoints = np.linspace(0, t_max, 1000)
 
-    model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.FullOutput(), n_procs=2)
-    #model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.ArrayOutput(timepoints), n_procs=2)
-    result = model.simulate(n_reps = 10)
+    #model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.FullOutput(), n_procs=2)
+    model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.ArrayOutput(timepoints), n_procs=2)
+    result = model.simulate(n_reps = 100)
 
     for j in range(len(result.list_ts)):
-        #print(result.list_ts[j][-10:])
-        #print(result.list_xs[j][-10:])
         pass
-    ssa.plot(result, show=True, show_mean=True)
+    ssa.plot(result, show=True, show_mean=True, show_std=True)
     #viz_y(result)
 
 

@@ -42,13 +42,18 @@ def plot(
                     label=x_names[ix])
     
     # legend
-    leg_lines = [plt.Line2D([0], [0], color=cm(ix / n_indices)) for ix in range(n_indices)]
-    ax.legend(leg_lines, x_names)
+    legend = ([plt.Line2D([0], [0], color=cm(ix / n_indices), alpha=0.5) for ix in range(n_indices)], x_names)
 
     # mean
     mean = np.mean(result.matrix_xs, axis=0)
     if show_mean:
-        ax.step(result.ts, mean, alpha = 1.0, label="mean")
+        for ix in range(n_indices):
+            ax.step(result.ts, mean[:, ix], alpha = 1.0, color=cm(ix / n_indices), label="mean")
+            legend[0].append(plt.Line2D([0], [0], color=cm(ix / n_indices), alpha=1.0))
+            legend[1].append("mean " + x_names[ix])
+
+    # add legend
+    ax.legend(*legend)
 
     # show on screen
     if show:

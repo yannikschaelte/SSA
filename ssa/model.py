@@ -3,8 +3,7 @@ import numbers
 import multiprocessing as mp
 
 from .direct import direct
-from .util import get_k_stoch
-from .output import Output
+from .output import Output, FullOutput
 from .result import FullResult
 from .engine import MultiProcessEngine, SimulationTask
 
@@ -30,10 +29,7 @@ class Model:
             x0: np.ndarray,
             t_max: numbers.Number,
             k: np.ndarray,
-            output: Output,
-            k_is_det: bool = True,
-            volume: float = 1.0,
-            use_na: bool = False,
+            output: Output = None,
             n_procs: int = 1):
         self.reactants = reactants
         self.products = products
@@ -42,9 +38,10 @@ class Model:
 
         self.x0 = x0
         self.t_max = t_max
-        self.k = None
-        self.set_k(k, reactants, k_is_det, volume, use_na)
+        self.k = k
 
+        if output is None:
+            output = FullOutput()
         self.output = output
 
         self.engine = MultiProcessEngine(n_procs=n_procs)
@@ -52,27 +49,6 @@ class Model:
         self.nr, self.nx = reactants.shape
 
         self._configure()
-
-    def set_k(
-            self,
-            k: np.ndarray,
-            reactants,
-            k_is_det: bool = True,
-            volume: float = 1.0,
-            use_na: bool = False):
-        """
-        Parameters
-        ----------
-
-        k: np.ndarray, shape = (nr, 1)
-            The reaction rate constants.
-        is_det: bool, optional (default = True)
-            Whether k is to be interpreted as deterministic reaction rate
-            constants. In that case, it must be converted to stochastic
-            rates working on single molecules.
-        """
-        if k_is_det:
-            self.k = get_k_stoch(k, reactants, volume, use_na)
 
     def _configure(self):
         self.reactants.shape = (self.nr, self.nx)

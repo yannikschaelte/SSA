@@ -32,6 +32,6 @@ def run():
     result1 = model1.simulate(n_reps=nr)
     ssa.plot(result1, show=False, ax=axes[1])
 
-    plt.show()
+    plt.savefig("ex3.png")
 
 run()

@@ -3,6 +3,7 @@ sys.path.insert(0, '/home/yannik/ssa')
 
 import ssa
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def run():
@@ -24,7 +25,7 @@ def run():
     model = ssa.Model(reactants=reactants, products=products,
                       x0=x0, k=k, t_max=t_max)
     result = model.simulate(n_reps=20)
-    ssa.plot(result, show=True)
-
+    ssa.plot(result, show=False)
+    plt.savefig("michaelis_menten.png")
 
 run()

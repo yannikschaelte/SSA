@@ -3,6 +3,7 @@ sys.path.insert(0, '/home/yannik/ssa')
 
 import ssa
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def run():
@@ -26,6 +27,7 @@ def run():
     model = ssa.Model(reactants=reactants, products=products,
                       k=k2, x0=x02, t_max=t_max, n_procs=2)
     result = model.simulate(n_reps=5)
-    ssa.plot(result, show=True)
+    ssa.plot(result, show=False)
+    plt.savefig("dimerization_kinetics.png")
 
 run()

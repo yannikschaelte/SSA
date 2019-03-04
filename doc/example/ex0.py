@@ -31,7 +31,8 @@ def run():
 
     for j in range(len(result.list_ts)):
         pass
-    ssa.plot(result, show=True, show_mean=True, show_std=True)
+    ssa.plot(result, show=False)
+    plt.savefig("ex0.png")
     #viz_y(result)
 
 

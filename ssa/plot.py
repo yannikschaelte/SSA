@@ -13,14 +13,15 @@ def plot(
         show_std: bool = True,
         set_xlim_to_t_max: bool = True,
         show_legend: bool = True,
-        show: bool = False):
+        show: bool = False,
+        ax = None):
     # generate matrix
     if isinstance(result, FullResult):
         result = result.for_timepoints()
 
     # dimensions
     nr, nt, nx = result.matrix_xs.shape
-    print(nr, nt, nx)
+
     # species to plot
     if x_indices is None:
         x_indices = list(range(nx))
@@ -33,8 +34,10 @@ def plot(
     # need a color
     cm = plt.get_cmap()
 
-    # plot  
-    fig, ax = plt.subplots()
+    # plot
+    if ax is None:
+        _, ax = plt.subplots()
+
     for ix in range(n_indices):
         for ir in range(nr):
             ax.step(result.ts,
@@ -79,4 +82,5 @@ def plot(
     # show on screen
     if show:
         plt.show()
-        return fig, ax
+
+    return ax

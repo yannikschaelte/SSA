@@ -28,13 +28,17 @@ def direct(
         cdv = np.cumsum(hazards)
         # total hazard
         h0 = cdv[-1]
-        cdv /= h0
-
-        # sample reaction index
-        index = sample_discrete(cdv)
 
         # sample exponential time
+        if h0 == 0.0:
+            # no more reactions
+            break
+
         delta_t = - 1.0 / h0 * np.log(np.random.uniform())
+
+        # sample reaction index
+        cdv /= h0
+        index = sample_discrete(cdv)
 
         # update state
         t = t + delta_t
@@ -42,6 +46,9 @@ def direct(
 
         # append to output
         output.append(t, x)
+
+    # fill possibly remaining fields
+    output.finalize()
 
     # transform to ndarrays
     ts, xs = output.as_ndarrays()

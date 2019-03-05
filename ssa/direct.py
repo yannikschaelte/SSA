@@ -20,6 +20,9 @@ def direct(
     # prepare output and append initial state
     output.initialize(t, x, t_max)
 
+    # reaction counter
+    n_reaction = 0
+
     while t < t_max:
         # find reaction hazards
         hazards = k * (x ** reactants).prod(axis=1)
@@ -47,8 +50,12 @@ def direct(
         # append to output
         output.append(t, x)
 
+        n_reaction += 1
+
     # fill possibly remaining fields
     output.finalize()
+
+    print("Number of reactions: ", n_reaction)
 
     # transform to ndarrays
     ts, xs = output.as_ndarrays()

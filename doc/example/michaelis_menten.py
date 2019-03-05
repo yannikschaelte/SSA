@@ -25,7 +25,8 @@ def run():
     model = ssa.Model(reactants=reactants, products=products,
                       x0=x0, k=k, t_max=t_max)
     result = model.simulate(n_reps=20)
-    ssa.plot(result, show=False)
+    x_names = ["S", "E", "SE", "P"]
+    ssa.plot(result, x_names=x_names, show=False)
     plt.savefig("michaelis_menten.png")
 
 run()

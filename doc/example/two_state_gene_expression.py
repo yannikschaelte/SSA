@@ -17,7 +17,7 @@ def run():
 
     output = ssa.output.ArrayOutput(np.linspace(0, t_max, 1000))
 
-    x_names = ["inactive promoter", "active promoeter", "mRNA", "protein"]
+    x_names = ["inactive promoter", "active promoter", "mRNA", "protein"]
 
     model = ssa.Model(reactants=reactants, products=products, k=k, x0=x0, t_max=t_max, output=output)
     result = model.simulate(n_reps=1)

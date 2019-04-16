@@ -55,7 +55,7 @@ def direct(
     # fill possibly remaining fields
     output.finalize()
 
-    print("Number of reactions: ", n_reaction)
+    # print("Number of reactions: ", n_reaction)
 
     # transform to ndarrays
     ts, xs = output.as_ndarrays()

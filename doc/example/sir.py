@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(0, '/home/yannik/ssa')
-
 import ssa
 import numpy as np
 import matplotlib.pyplot as plt

@@ -1,10 +1,8 @@
 from abc import ABC, abstractmethod
 import numpy as np
-import numba as nb
 
 
 class Output(ABC):
-
     @abstractmethod
     def __init__(self):
         super().__init__()
@@ -27,7 +25,6 @@ class Output(ABC):
 
 
 class FullOutput(Output):
-
     def __init__(self):
         super().__init__()
         self.ts = []
@@ -54,7 +51,6 @@ class FullOutput(Output):
 
 
 class ArrayOutput(Output):
-
     def __init__(self, ts: np.ndarray):
         super().__init__()
         self.ts = ts
@@ -105,6 +101,5 @@ class ArrayOutput(Output):
 
     def as_ndarrays(self):
         if self.cur_ix < self.nt:
-            raise ValueError(
-                "ArrayOutput not filled completely.")
+            raise ValueError("ArrayOutput not filled completely.")
         return self.ts, self.xs

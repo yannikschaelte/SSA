@@ -1,5 +1,3 @@
-import sys
-sys.path.insert(0, "/home/yannik/ssa")
 import numpy as np
 import matplotlib.pyplot as plt
 import timeit
@@ -8,8 +6,10 @@ import scipy as sp
 
 import ssa
 
+
 def h(x, pre, c):
-    return (x**pre).prod(1) * c
+    return (x ** pre).prod(1) * c
+
 
 def gillespie(x, c, pre, post, max_t):
     """
@@ -57,7 +57,7 @@ def gillespie(x, c, pre, post, max_t):
             t_store.append(max_t)
             x_store.append(x)
             break
-        reaction = sp.random.choice(c.size, p=h_vec/h0)
+        reaction = sp.random.choice(c.size, p=h_vec / h0)
         t = t + delta_t
         x = x + S[reaction]
 
@@ -66,12 +66,13 @@ def gillespie(x, c, pre, post, max_t):
 
     return sp.asarray(t_store), sp.asarray(x_store)
 
+
 def viz_y(result):
     _, ax = plt.subplots()
     nr = len(result.list_ts)
     for j in range(nr):
-        ax.step(result.list_ts[j], result.list_xs[j][:, 0], color='b')
-        ax.step(result.list_ts[j], result.list_xs[j][:, 1], color='r')
+        ax.step(result.list_ts[j], result.list_xs[j][:, 0], color="b")
+        ax.step(result.list_ts[j], result.list_xs[j][:, 1], color="r")
 
     plt.show()
 
@@ -84,24 +85,31 @@ k = np.array([1.0, 1.0, 0.1, 0.04])
 t_max = 2e2
 timepoints = np.linspace(0, t_max, 20)
 
+
 def run():
-    model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.FullOutput())
-    #model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.ArrayOutput(timepoints))
-    result = model.simulate(n_reps = 10)
+    model = ssa.Model(reactants, products, x0, t_max, k, output=ssa.output.FullOutput())
+    # model = ssa.Model(reactants, products, x0, t_max, k, output = ssa.output.ArrayOutput(timepoints))
+    result = model.simulate(n_reps=10)
 
     for j in range(len(result.list_ts)):
-        #print(result.list_ts[j][-10:])
-        #print(result.list_xs[j][-10:])
+        # print(result.list_ts[j][-10:])
+        # print(result.list_xs[j][-10:])
         pass
 
-    #viz_y(result)
+    # viz_y(result)
+
 
 def run_gillespie():
     for _ in range(10):
-        gillespie(x0, k, reactants, products, t_max)   
+        gillespie(x0, k, reactants, products, t_max)
 
-#cProfile.run("run()", 'restats')
-#p.strip_dirs().sort_stats(-1).print_stats()
+
+# cProfile.run("run()", 'restats')
+# p.strip_dirs().sort_stats(-1).print_stats()
 print(timeit.timeit("run()", setup="from __main__ import run", number=10))
-print(timeit.timeit("run_gillespie()", setup="from __main__ import run_gillespie", number=10))
-#viz_y(result.list_ts, result.list_xs)
+print(
+    timeit.timeit(
+        "run_gillespie()", setup="from __main__ import run_gillespie", number=10
+    )
+)
+# viz_y(result.list_ts, result.list_xs)

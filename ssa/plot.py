@@ -6,15 +6,16 @@ from .result import FullResult, ArrayResult
 
 
 def plot(
-        result: Union[FullResult, ArrayResult],
-        x_indices: List[int] = None,
-        x_names: List[str] = None,
-        show_mean: bool = True,
-        show_std: bool = True,
-        set_xlim_to_t_max: bool = True,
-        show_legend: bool = True,
-        show: bool = False,
-        ax = None):
+    result: Union[FullResult, ArrayResult],
+    x_indices: List[int] = None,
+    x_names: List[str] = None,
+    show_mean: bool = True,
+    show_std: bool = True,
+    set_xlim_to_t_max: bool = True,
+    show_legend: bool = True,
+    show: bool = False,
+    ax=None,
+):
     # generate matrix
     if isinstance(result, FullResult):
         result = result.for_timepoints()
@@ -40,18 +41,23 @@ def plot(
 
     for ix in range(n_indices):
         for ir in range(nr):
-            ax.step(result.ts,
-                    result.matrix_xs[ir, :, x_indices[ix]],
-                    color=cm(ix / n_indices),
-                    alpha=nr**-0.8,
-                    label=x_names[ix])
-    
+            ax.step(
+                result.ts,
+                result.matrix_xs[ir, :, x_indices[ix]],
+                color=cm(ix / n_indices),
+                alpha=nr ** -0.8,
+                label=x_names[ix],
+            )
+
     # limits
     if set_xlim_to_t_max:
         ax.set_xlim([0, result.t_max])
 
     # legend
-    legend = ([plt.Line2D([0], [0], color=cm(ix / n_indices)) for ix in range(n_indices)], x_names)
+    legend = (
+        [plt.Line2D([0], [0], color=cm(ix / n_indices)) for ix in range(n_indices)],
+        x_names,
+    )
 
     # mean
     mean = np.mean(result.matrix_xs, axis=0)
@@ -62,18 +68,21 @@ def plot(
                 mean[:, ix],
                 alpha=1.0,
                 color=cm(ix / n_indices),
-                label="mean")
-            #legend[0].append(plt.Line2D([0], [0], color=cm(ix / n_indices), alpha=1.0))
-            #legend[1].append("mean " + x_names[ix])
+                label="mean",
+            )
+            # legend[0].append(plt.Line2D([0], [0], color=cm(ix / n_indices), alpha=1.0))
+            # legend[1].append("mean " + x_names[ix])
 
     if show_std and nr > 1:
         std = np.sqrt(np.var(result.matrix_xs, axis=0))
         for ix in range(n_indices):
             ax.fill_between(
                 result.ts,
-                mean[:, ix] - std[:, ix], mean[:, ix] + std[:, ix],
+                mean[:, ix] - std[:, ix],
+                mean[:, ix] + std[:, ix],
                 color=cm(ix / n_indices),
-                alpha=nr**-0.8)
+                alpha=nr ** -0.8,
+            )
 
     # add legend
     if show_legend:

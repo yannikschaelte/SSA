@@ -23,22 +23,26 @@ class Model:
     """
 
     def __init__(
-            self,
-            reactants: np.ndarray,
-            products: np.ndarray,
-            x0: np.ndarray,
-            t_max: numbers.Number,
-            k: np.ndarray,
-            output: Output = None,
-            n_procs: int = 1):
+        self,
+        reactants: np.ndarray,
+        products: np.ndarray,
+        x0: np.ndarray,
+        t_max: numbers.Number,
+        k: np.ndarray,
+        max_reactions: int = np.inf,
+        output: Output = None,
+        n_procs: int = 1,
+    ):
         self.reactants = reactants
         self.products = products
-        
+
         self.reaction_matrix = products - reactants
 
         self.x0 = x0
         self.t_max = t_max
         self.k = k
+
+        self.max_reactions = max_reactions
 
         if output is None:
             output = FullOutput()
@@ -59,24 +63,22 @@ class Model:
         if not isinstance(self.t_max, numbers.Number) or not np.isfinite(self.t_max):
             raise ValueError("t_max must be a finite integer.")
 
-    def simulate(
-            self,
-            alg = None,
-            n_reps: int = 1,
-            **kwargs):
+    def simulate(self, alg=None, n_reps: int = 1, **kwargs):
         # choose algorithm
         if alg is None:
             alg = direct
 
         # algorithm arguments
         alg_args = dict(
-            reactants = self.reactants,
-            reaction_matrix = self.reaction_matrix,
-            x0 = self.x0,
-            k = self.k,
-            t_max = self.t_max,
-            output = self.output.create_empty(),
-            **kwargs)
+            reactants=self.reactants,
+            reaction_matrix=self.reaction_matrix,
+            x0=self.x0,
+            k=self.k,
+            t_max=self.t_max,
+            max_reactions=self.max_reactions,
+            output=self.output.create_empty(),
+            **kwargs
+        )
 
         list_ts = []
         list_xs = []
@@ -95,6 +97,5 @@ class Model:
         for ts, xs in ret:
             list_ts.append(ts)
             list_xs.append(xs)
-        
-        return FullResult(list_ts, list_xs, self.t_max)
 
+        return FullResult(list_ts, list_xs, self.t_max)

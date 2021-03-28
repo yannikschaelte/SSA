@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(0, '/home/yannik/ssa')
-
 import ssa
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,7 +14,9 @@ def run():
     output = ssa.output.ArrayOutput(np.linspace(0, t_max, 100))
     output = ssa.output.FullOutput()
 
-    model = ssa.Model(reactants=reactants, products=products, t_max=t_max, x0=x0, k=k, output=output)
+    model = ssa.Model(
+        reactants=reactants, products=products, t_max=t_max, x0=x0, k=k, output=output
+    )
     result = model.simulate(n_reps=10)
 
     x_names = ["mRNA"]

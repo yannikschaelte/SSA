@@ -1,5 +1,6 @@
 import sys
-sys.path.insert(0, '/home/yannik/ssa')
+
+sys.path.insert(0, "/home/yannik/ssa")
 
 import ssa
 import numpy as np
@@ -18,5 +19,6 @@ def run():
     result = model.simulate(n_reps=20)
     ssa.plot(result, show=False)
     plt.savefig("mono_molecular_chain.png")
+
 
 run()

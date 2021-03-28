@@ -15,7 +15,6 @@ def work(pickled_task):
 
 
 class SimulationTask:
-
     def __init__(self, alg, alg_args):
         self.alg = alg
         self.alg_args = alg_args
@@ -45,7 +44,8 @@ class MultiProcessEngine:
             logger.warning(
                 f"Engine set up to use up to {n_procs} processes in total. "
                 f"The number was automatically determined and might not be "
-                f"appropriate on some systems.")
+                f"appropriate on some systems."
+            )
         self.n_procs = n_procs
 
     def execute(self, tasks):
@@ -56,8 +56,9 @@ class MultiProcessEngine:
         else:
             pickled_tasks = [pickle.dumps(task) for task in tasks]
             n_procs = min(self.n_procs, len(tasks))
-            logger.info(f"Performing parallel task execution on {n_procs} "
-                        f"processes.")
+            logger.info(
+                f"Performing parallel task execution on {n_procs} " f"processes."
+            )
 
             with Pool(processes=n_procs) as pool:
                 ret = pool.map(work, pickled_tasks)

@@ -1,21 +1,19 @@
-import numba as nb
 import numpy as np
 
 
 # Avogadro's constant, [mol**(-1)]
 NA = 6.02214085774e23
 
-MSG_REACTION_ORDER = \
-    "Generation of stochastic reaction coefficient constants from " \
-    "reaction of order > 2 currently not supported. Consider rewriting " \
+MSG_REACTION_ORDER = (
+    "Generation of stochastic reaction coefficient constants from "
+    "reaction of order > 2 currently not supported. Consider rewriting "
     "in terms of simpler reactions."
+)
 
 
 def k_det_to_k_stoch(
-        k_det: np.ndarray,
-        reactants: np.ndarray,
-        volume: float = 1.0,
-        use_na: bool = True):
+    k_det: np.ndarray, reactants: np.ndarray, volume: float = 1.0, use_na: bool = True
+):
     nr = reactants.shape[0]
 
     reaction_orders = np.sum(reactants, axis=1)
@@ -23,7 +21,7 @@ def k_det_to_k_stoch(
         raise ValueError(MSG_REACTION_ORDER)
 
     k_stoch = k_det.copy()
-    
+
     if use_na:
         factor = NA * volume
     else:
@@ -39,10 +37,8 @@ def k_det_to_k_stoch(
 
 
 def k_stoch_to_k_det(
-        k_stoch: np.ndarray,
-        reactants: np.ndarray,
-        volume: float = 1.0,
-        use_na: bool = True):
+    k_stoch: np.ndarray, reactants: np.ndarray, volume: float = 1.0, use_na: bool = True
+):
     nr = reactants.shape[0]
 
     reaction_orders = np.sum(reactants, axis=1)
@@ -74,7 +70,6 @@ def molecule_number_to_molar_concentration(x, volume: float = 1.0):
     return x / (factor * volume)
 
 
-#@nb.jit
 def sample_discrete(cdv):
     """
     Sample an index from a weighted discrete distribution.
@@ -95,6 +90,6 @@ def sample_discrete(cdv):
     # sample
     p = np.random.uniform()
     # find right index of where p would be inserted
-    index = cdv.searchsorted(p, side='right')
+    index = cdv.searchsorted(p, side="right")
 
     return index

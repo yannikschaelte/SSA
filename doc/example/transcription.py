@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(0, '/home/yannik/ssa')
-
 import ssa
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,7 +7,7 @@ def run():
     reactants = np.array([[0], [1]])
     products = np.array([[1], [0]])
 
-    x_names = 'mRNA'
+    x_names = "mRNA"
 
     t_max = 1e2
     x0 = np.array([0])

@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(0, '/home/yannik/ssa')
-
 import ssa
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,7 +12,7 @@ def run():
 
     x0 = np.array([40, 3])
     t_max = 0.1
-    
+
     k0 = np.array([2.3])
     k1 = np.array([30.0])
 
@@ -33,5 +30,6 @@ def run():
     ssa.plot(result1, show=False, ax=axes[1])
 
     plt.savefig("ex3.png")
+
 
 run()

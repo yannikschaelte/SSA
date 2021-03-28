@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(0, '/home/yannik/ssa')
-
 import ssa
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,9 +12,12 @@ def run():
     t_max = 30
     output = ssa.output.FullOutput()
 
-    model = ssa.Model(reactants, products, x0=x0, k=k, t_max=t_max, output=output, n_procs=2)
+    model = ssa.Model(
+        reactants, products, x0=x0, k=k, t_max=t_max, output=output, n_procs=2
+    )
     result = model.simulate(n_reps=10)
     ssa.plot(result, show=False)
     plt.savefig("ex4.png")
+
 
 run()
